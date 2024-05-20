@@ -54,6 +54,8 @@ const providerController = {
            "Unauthorized access. Only Admin users are permitted to use this functionality.",
        });
      }
+  
+  
     const  id = req.params.id;
     const newData = req.body;
     try {

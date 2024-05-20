@@ -117,29 +117,28 @@ const Provider = {
     });
   },
 
-  updateRecordById: (recordId, newData, callback) => {
-    console.log("id "+recordId)
+  updateRecordById: async (recordId, newData) => {
     const {
-      name,
-      mobile_number,
-      date_of_birth,
-      address,
-      pincode,
-      city,
+        name,
+        mobile_number,
+        date_of_birth,
+        address,
+        pincode,
+        city,
     } = newData;
-  
+
     const sql = `
-      UPDATE users
-      SET 
-        name = ?,
-        mobile_number = ?,
-        date_of_birth = ?,
-        address = ?,
-        pincode = ?,
-        city = ?
-      WHERE user_id = ?
-    `;
-  
+    UPDATE users
+    SET 
+    name = ?,
+    mobile_number = ?,
+    date_of_birth = ?,
+    address = ?,
+    pincode = ?,
+    city = ?
+    WHERE user_id = ?
+`;
+
     const values = [
       name,
       mobile_number,
@@ -148,15 +147,16 @@ const Provider = {
       pincode,
       city,
       recordId
-    ];
-  
-    pool.query(sql, values, (err, result) => {
-      if (err) {
-        return callback(err);
-      }
-      return callback(null, result.affectedRows > 0); // Return true if updated successfully
-    });
-  },
+  ];
+
+    try {
+        const result = await pool.query(sql, values);
+        console.log("result affected ", result[0].affectedRows); 
+        return result[0].affectedRows > 0; 
+    } catch (err) {
+        throw err; 
+    }
+},
 
   deleteRecordById: (recordId, callback) => {
     const sql = `DELETE FROM users WHERE id = ?`;
